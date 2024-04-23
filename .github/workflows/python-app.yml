@@ -1,0 +1,39 @@
+# 此工作流程将安装 Python 依赖项，使用单个版本的 Python 运行测试和 lint
+#有关更多信息，请参阅：https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+名称：Python应用程序
+
+on:
+  push:
+    branches: [    分支：[ “主” ] “主人”  ]
+  pull_request:
+    branches: [    分支：[“主”]"master" ]
+
+permissions:
+  contents:   内容： 阅读
+
+jobs:
+  build:
+
+    runs-on:     运行：ubuntu-latest
+
+    steps:
+    - uses:     - 使用：actions/checkout@v3
+    - name:     - 名称：设置Python 3.10
+      uses:       使用：actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name :      - 名称：安装依赖项
+      运行：|
+        python -m pip install --升级 pip
+        pip安装flake8 pytest
+        if [ -f 要求.txt ] ; 然后pip install -rrequirements.txt；菲
+    -姓名：Lint with flake8
+      运行：|
+        # 如果存在 Python 语法错误或未定义的名称，则停止构建
+        片8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero 将所有错误视为警告。GitHub 编辑器的宽度为 127 个字符
+        片8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    -姓名：用pytest测试
+      运行：|
+        py测试
